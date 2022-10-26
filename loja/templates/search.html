@@ -1,0 +1,48 @@
+{% extends 'layouts.html' %}
+
+{% block content %}
+
+
+{% include "navbar.html" %}
+{% include "_messages.html" %}
+<div class="container mt-3">
+    <div class="row">
+
+        {% for produto in produtos %}
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{url_for('static',filename='images/' + produto.image_1)}}" alt="{{produto.name}}"
+                    class="card-img-top" height="200">
+                <div class="card-body">
+                    {% if produto.discount > 0 %}
+                    <h5>
+                        Desconto: {{produto.discount}} %</h5>
+                    {% endif %}
+                    <h4 class="text-center">{{produto.name}}</h4>
+                    <p class="text-center">Preço: R$ {{produto.price}}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{url_for('pagina_unica',id=produto.id)}}"
+                        class="float-left btn btn-sm btn-primary">Detalhes</a>
+                    <form action="{{url_for('addCart')}}" method="POST">
+                        <input type="hidden" name="produto_id" value="{{produto.id}}">
+                        <button type="submit" class="btn btn-sm btn-outline-success float-right">Adicionar
+                            Carrinho</button>
+                        <input type="hidden" name="quantity" id="" value="1" min="1" max="{{produto.stock}}">
+                        {% set colors = produto.colors.split(',') %}
+                        <select name="colors" id="colors" style="visibility: hidden;">
+                            {% for color in colors %}
+                            {% set col = color.split(':') %}
+                            <option value="{{col[0]}}">{{col[0]|capitalize}}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+</div>
+{% endblock content %}

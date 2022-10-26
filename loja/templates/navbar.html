@@ -1,0 +1,71 @@
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/ ">Pagina Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Nossos Produtos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                            aria-expanded="false">
+                            Marcas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for marca in marcas %}
+                            <a class="dropdown-item" href="{{url_for('get_marca',id=marca.id)}}">{{marca.name}}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                            aria-expanded="false">
+                            Categorias
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for categoria in categorias %}
+                            <a class="dropdown-item"
+                                href="{{url_for('get_categoria',id=categoria.id)}}">{{categoria.name}}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('cliente_logout')}}">Olá {{current_user.name}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('cliente_logout')}}">Sair</a>
+                    </li>
+
+                    {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('cadastrar_clientes')}}">Cadastrar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('clientelogin')}}">Login</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('getCart')}}"
+                            tabindex="-1">Carrinho({{session['LojainCarrinho']|length}})</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" method="POST">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Pesquisar Produtos"
+                        autofocus="autofocus" name="search_string">
+                    <input class="btn btn-outline-success my-2 my-sm-0" type="submit" formaction="/search"
+                        value="Pesquisar">
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>

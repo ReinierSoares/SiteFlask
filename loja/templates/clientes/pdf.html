@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerar Pdf</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+
+<body>
+
+</html>
+
+<div class="container mt-4">
+    {% include "_messages.html" %}
+    <div class="row">
+        <div class="col-md-12">
+            <b style="float:right;">Numero do Pedido: {{pedidos.notafiscal}}</b>
+            <br>
+            Status do Pedido: {{pedidos.status}}
+            <br>
+            Nome do Cliente: {{cliente.name}}
+            <br>
+            Email do Cliente: {{cliente.email}}
+            <br>
+            Telefone do Cliente: {{cliente.contact}}
+            <br>
+            <br>
+            <table class="table table-sm">
+                <thead>
+                    <th>Codigo</th>
+                    <th>Nome</th>
+                    <th>Cor</th>
+                    <th>Preco</th>
+                    <th>Quantidade</th>
+                    <th>Desconto</th>
+                    <th>Subtotal</th>
+                </thead>
+                <tbody>
+                    {% for key, produto in pedidos.pedido.items() %}
+                    {% set discount = "%0.2f" | format((produto.discount/100) * produto.price|float) %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+
+                        <td>{{produto.name}}</td>
+                        <form action="{{url_for('updateCarro', code=key)}}" method="POST">
+                            <td>
+                                {{produto.color|capitalize}}
+                            </td>
+                            <td>R$ {{produto.price}}</td>
+                            <td>{{produto.quantity}}</td>
+                            {% if produto.discount > 0 %}
+                            <td>{{produto.discount}}% &nbsp; = {{discount}}</td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                            {% set subtotal = produto.quantity|int * produto.price|float %}
+                            <td>R$ {{"%0.2f"|format((subtotal|float) - discount|float)}}</td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td colspan="3">Imposto: &nbsp; R${{imposto}}</td>
+                        <td colspan="5">Valor Pagar: &nbsp; R${{gTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
